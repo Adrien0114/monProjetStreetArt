@@ -124,7 +124,7 @@ Template.afficherParcours.events({
             html:
               'Cliquez une fois sur le repère pour ouvrir l\'image' +
               '<br> ' + '<br> ' +
-              'Double-cliiquez sur l\'oeuvre pour signaler que vous l\'avez aperçue',
+              'Double-cliquez sur l\'oeuvre pour signaler que vous l\'avez aperçue',
             showCloseButton: true,
           })
         },

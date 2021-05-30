@@ -17,6 +17,13 @@ h4 {
   font-size: medium;
 }
 
+h5 {
+  color: gray;
+  font-family: Impact, fantasy;
+  font-size: large;
+  color: #fbc638;
+}
+
 #confirmerParcours {
   margin: auto;
   display: block;
@@ -80,3 +87,14 @@ ol {
   opacity: 1;
   left: 0;
 }
+
+#informations {
+  border: black solid 1px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  line-height: 10px;
+  font-size: 15px;
+  text-align: center;
+}
+

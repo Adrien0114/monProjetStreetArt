@@ -21,16 +21,16 @@ Meteor.startup(function () {
 
 Template.creerParcours.onCreated(function () {
     var self = this;
-
+    
     GoogleMaps.ready('map', function (map) {
         var marker;
-
+        
         // Create and move the marker when latLng changes.
         self.autorun(function () {
             var latLng = Geolocation.latLng();
             if (!latLng)
-                return;
-
+            return;
+            
             // If the marker doesn't yet exist, create it.
             if (!marker) {
                 marker = new google.maps.Marker({
@@ -42,7 +42,7 @@ Template.creerParcours.onCreated(function () {
             else {
                 marker.setPosition(latLng);
             }
-
+            
             if (firstRun) {
                 // Center and zoom the map view onto the current position.
                 map.instance.setCenter(marker.getPosition());
@@ -50,9 +50,9 @@ Template.creerParcours.onCreated(function () {
                 firstRun = false;
             }
         });
-
+        
         displayMarkers(map);
-
+        
     });
 });
 
@@ -95,17 +95,28 @@ Template.creerParcours.events({
                         const ajoutId = Parcours.insert({
                             titre: result.value,
                             idList: listeOeuvresId
-                    });
-                    FlowRouter.go('afficherParcours', { _parcoursId: ajoutId });
-                };
-            });
-        };
-    });
-},
+                        });
+                        FlowRouter.go('afficherParcours', { _parcoursId: ajoutId });
+                    };
+                });
+            };
+        });
+    },
     'click #retour'(event) {
         event.preventDefault();
         FlowRouter.go('accueilLog');
     },
+    'click #informations'(event) {
+        event.preventDefault();
+        Swal.fire({
+            icon: 'info',
+            html:
+              'Cliquez une fois sur le repère pour ouvrir l\'image' +
+              '<br> ' + '<br> ' +
+              'Double-cliquez sur l\'oeuvre pour l\'ajouter à votre parcours',
+            showCloseButton: true,
+          })
+        },
 });
 
 function displayMarkers(map) {
@@ -118,10 +129,19 @@ function displayMarkers(map) {
             position: new google.maps.LatLng(oeuvre.lat, oeuvre.lng),
             map: map.instance,
         });
+        const contentString = `<img src="${oeuvre.image}">`;
+        const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+        });
         google.maps.event.addListener(marker, 'click', (function(marker) {
             return function() {
+                infowindow.open(map, marker);
+            }
+        })(marker));
+        google.maps.event.addListener(marker, 'dblclick', (function(marker) {
+            return function() {
                 addMarkerToList(oeuvre.lat, oeuvre.lng, oeuvre._id, oeuvre.image);
-                marker.setIcon('http://maps.google.com/mapfiles/marker_orange.png');
+                marker.setIcon('http://maps.google.com/mapfiles/marker_yellow.png');
             }
         })(marker));
     })
