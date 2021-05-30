@@ -5,6 +5,7 @@
 }
 
 h1 {
+  text-align: center;
   color: black;
   font-family: FreeMono, monospace;
   font-size: 1.5em;
@@ -15,6 +16,7 @@ h4 {
   font-family: FreeMono, monospace;
   font-style: italic;
   font-size: medium;
+  margin-bottom: 0;
 }
 
 h5 {
@@ -25,15 +27,21 @@ h5 {
 }
 
 #confirmerParcours {
-  margin: auto;
   display: block;
-  width: 180px;
-  height: 40px;
-  color: black;
-  border: #fbc638 solid 2px;
-  border-radius: 20px;
-  font-family: FreeMono, monospace;
-  font-weight: bold;
+  border-radius: 4px;
+  border-color: lightgray;
+  background-color: #fbc638;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 17px;
+  font-family: Impact, fantasy;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: auto;
+  margin-top: 5px;
 }
 
 .imageCSS {
