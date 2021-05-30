@@ -14,3 +14,21 @@
     font-family: FreeMono, monospace;
     font-size: 15px;
 }
+
+#textStyle {
+    font-family: FreeMono, monospace;
+    font-size: 15px; 
+}
+
+ul {
+    font-family: FreeMono, monospace;
+    font-size: 15px;
+    line-height: 1.5;
+    text-align: justify;
+}
+
+p {
+    font-family: FreeMono, monospace;
+    font-size: 20px;
+    font-weight: bold;
+}
