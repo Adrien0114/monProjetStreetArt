@@ -20,8 +20,8 @@
 }
 
 .imageClass {
-  background-color: green;
-  border: red solid 2px;
+  filter: grayscale(100%);
+  border: greenyellow solid 1px;
 }
 
 #boutonTerminé {
@@ -39,5 +39,19 @@
   box-shadow: 2px 2px 0 grey;
   text-shadow: -0.2px 0 black, 0 0.2px black,
     0.2px 0 black, 0 -0.2px black
+}
+
+#information {
+  border: black solid 1px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  line-height: 10px;
+  font-size: 15px;
+  text-align: center;
+  display: inline-block;
+  position: absolute;
+  right: 0px;
+  margin-right: 19px;
 }
 
