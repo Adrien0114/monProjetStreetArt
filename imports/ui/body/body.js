@@ -20,9 +20,13 @@ import { Session } from 'meteor/session';
 Template.app_body.events({
     'click #cta'(event){
     event.preventDefault();
-    const routeActuelle = FlowRouter.getRouteName();
-    console.log(routeActuelle);
+    let routeActuelle = FlowRouter.getRouteName();
+    if (routeActuelle == "afficherParcours") {
+        const param = FlowRouter.getParam('_parcoursId');
+        routeActuelle = [routeActuelle, param]
+    }
     Session.set('routeDOrigine', routeActuelle);
+    console.log(Session.get('routeDOrigine'));
     FlowRouter.go('descriptif');
     }
 })

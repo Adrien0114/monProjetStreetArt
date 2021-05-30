@@ -1,29 +1,29 @@
-<template name='afficherParcours'>
-    <button id="retour">Retour</button>
-    <br>
-    <h3>Voici ton parcours !</h3>
-    <br>
-    <hr>
-    <br>
-    <p>    
-      {{#each image in images}}
-        <img src="{{image}}" alt="image" class="imageStyle">
-      {{/each}}
-    </p>
-    <br>
-    <div id="myProgress">
-      <div id="myBar"></div>
-    </div>
-    <br>
-    <button id="boutonTerminé">Terminer ce parcours</button>
-    <br>
-    <hr>
-    <br>
-    <div class="map-container">
-        {{#unless geolocationError}}
-          {{> googleMap name="map" options=mapOptions}}
-        {{else}}
-          Geolocation failed: {{geolocationError}}
-        {{/unless}}
-    </div>
+<template name="afficherParcours">
+  <button id="retour">Retour</button>
+  <br />
+  <h3>Voici ton parcours !</h3>
+  <br />
+  <hr />
+  <br />
+  <p>
+    {{#each image in images}}
+    <img src="{{image}}" alt="image" class="imageStyle" />
+    {{/each}}
+  </p>
+  <br />
+  <div id="myProgress">
+    <div id="myBar"></div>
+  </div>
+  <br />
+  <button id="boutonTerminé">Terminer ce parcours</button>
+  <br />
+  <hr />
+  <br />
+  <div class="map-container">
+    {{#unless geolocationError}} 
+      {{> googleMap name="map" options=mapOptions}}
+    {{else}}   
+      Geolocation failed: {{geolocationError}} 
+    {{/unless}}
+  </div>
 </template>
