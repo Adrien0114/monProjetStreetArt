@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:900i');
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 #wrapper {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 #cta {
@@ -28,33 +28,33 @@
 }
 
 #div1 {
-        width: 100px;
-        height: 100px;
-    }
+    width: 100px;
+    height: 100px;
+}
 
 #p1 {
-        text-align: center;
-        margin-top: -1px;
-        color: white;
-        font-family: Impact, fantasy;
-        font-size: 35px;
-        text-shadow: 0 0 8px #000;
-        text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
-        letter-spacing: 0mm;
-    }
+    text-align: center;
+    margin-top: -1px;
+    color: white;
+    font-family: Impact, fantasy;
+    font-size: 35px;
+    text-shadow: 0 0 8px #000;
+    text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
+    letter-spacing: 0mm;
+}
 
-    #p2 {
-        text-align: center;
-        margin-top: -52px;
-        color: white;
-        font-family: Impact, fantasy;
-        font-size: 70px;
-        text-shadow: 0 0 8px #000;
-        text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px; 
-    }
+#p2 {
+    text-align: center;
+    margin-top: -52px;
+    color: white;
+    font-family: Impact, fantasy;
+    font-size: 70px;
+    text-shadow: 0 0 8px #000;
+    text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px; 
+}
 
 #cta:focus {
-   outline: none; 
+    outline: none; 
 }
 
 #cta:hover {
@@ -72,7 +72,7 @@
     margin-right: 10px;
 }
 
-  
+
 /**************SVG****************/
 
 path.one {
