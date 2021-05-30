@@ -11,12 +11,14 @@ h3 {
 }
 
 h4 {
+  text-align: center;
   color: black;
   font-family: FreeMono, monospace;
   font-size: 1.5em;
 }
 
 h5 {
+  text-align: center;
   color: gray;
   font-family: FreeMono, monospace;
   font-style: italic;
