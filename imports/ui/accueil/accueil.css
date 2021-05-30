@@ -17,7 +17,7 @@ h4 {
   font-size: 1.5em;
 }
 
-h5 {
+#h5Style {
   text-align: center;
   color: gray;
   font-family: FreeMono, monospace;
