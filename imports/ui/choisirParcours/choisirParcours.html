@@ -1,6 +1,6 @@
 <template name='choisirParcours'>
     <!-- Appel-->
-    <button id="retour">Retour</button>
+    <button id="retour" style="vertical-align:middle"><span>Retour</span></button>
     <br>
     <h3>Choisis ton parcours !</h3>
     <h1>Vous pouvez ici choisir des parcours créés par d'autres utilisateurs </h1>
@@ -9,7 +9,7 @@
     <ol id="listeParcours">
         <!-- parcours : nom du helper -->
         {{#each parcours}}
-            {{> parcoursLi}}
+        {{> parcoursLi}}
         {{/each}}
     </ol>
     <br>
@@ -23,9 +23,9 @@
         <!-- Pour chaque image dans mon tableau images (helpers) : le image au singulier = nom que je donne à chaque données de mon tableau -->
         <!-- images fait référence au tableau de la ligne 41 -->
         {{#each id in images}}
-            <img src="{{id}}" alt="image" class="imageCSS">
+        <img src="{{id}}" alt="image" class="imageCSS">
         {{/each}}
-        <br>    
+        <br>
         <br>
         <button class="styleBouton"></button>
         <br>
