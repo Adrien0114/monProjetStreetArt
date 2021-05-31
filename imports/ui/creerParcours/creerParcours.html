@@ -17,9 +17,9 @@
   <br>
   <div class="map-container">
     {{#unless geolocationError}}
-    {{> googleMap name="map" options=mapOptions}}
+      {{> googleMap name="map" options=mapOptions}}
     {{else}}
-    Geolocation failed: {{geolocationError}}
+      Geolocation failed: {{geolocationError}}
     {{/unless}}
   </div>
 </template>

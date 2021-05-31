@@ -1,12 +1,14 @@
 <template name="afficherParcours">
-  <button id="retour" style="vertical-align:middle"><span>Retour</span></button>
+  <button id="retour" style="vertical-align: middle">
+    <span>Retour</span>
+  </button>
   <br />
   <h3>Voici ton parcours !</h3>
   <br />
   <hr />
   <br />
   <button id="information">i</button>
-  <br>
+  <br />
   <p>
     {{#each image in images}}
     <img src="{{image}}" alt="image" class="imageStyle" />
@@ -24,7 +26,7 @@
   <div class="map-container">
     {{#unless geolocationError}} 
       {{> googleMap name="map" options=mapOptions}}
-    {{else}}   
+    {{else}} 
       Geolocation failed: {{geolocationError}} 
     {{/unless}}
   </div>
