@@ -16,151 +16,165 @@ var MAP_ZOOM = 15;
 var firstRun = true;
 
 Meteor.startup(function () {
-    GoogleMaps.load();
+  GoogleMaps.load();
 });
 
 Template.creerParcours.onCreated(function () {
-    var self = this;
-    
-    GoogleMaps.ready('map', function (map) {
-        var marker;
-        
-        // Create and move the marker when latLng changes.
-        self.autorun(function () {
-            var latLng = Geolocation.latLng();
-            if (!latLng)
-            return;
-            
-            // If the marker doesn't yet exist, create it.
-            if (!marker) {
-                marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(latLng.lat, latLng.lng),
-                    map: map.instance
-                });
-            }
-            // The marker already exists, so we'll just change its position.
-            else {
-                marker.setPosition(latLng);
-            }
-            
-            if (firstRun) {
-                // Center and zoom the map view onto the current position.
-                map.instance.setCenter(marker.getPosition());
-                map.instance.setZoom(MAP_ZOOM);
-                firstRun = false;
-            }
+  var self = this;
+
+  GoogleMaps.ready('map', function (map) {
+    var marker;
+
+    // Create and move the marker when latLng changes.
+    self.autorun(function () {
+      var latLng = Geolocation.latLng();
+      if (!latLng) return;
+
+      // If the marker doesn't yet exist, create it.
+      if (!marker) {
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(latLng.lat, latLng.lng),
+          map: map.instance,
         });
-        
-        displayMarkers(map);
-        
+      }
+      // The marker already exists, so we'll just change its position.
+      else {
+        marker.setPosition(latLng);
+      }
+
+      if (firstRun) {
+        // Center and zoom the map view onto the current position.
+        map.instance.setCenter(marker.getPosition());
+        map.instance.setZoom(MAP_ZOOM);
+        firstRun = false;
+      }
     });
+
+    displayMarkers(map);
+  });
 });
 
 Template.creerParcours.helpers({
-    geolocationError: function () {
-        var error = Geolocation.error();
-        return error && error.message;
-    },
-    mapOptions: function () {
-        var latLng = Geolocation.latLng();
-        // Initialize the map once we have the latLng.
-        if (GoogleMaps.loaded() && latLng) {
-            return {
-                center: new google.maps.LatLng(latLng.lat, latLng.lng),
-                zoom: MAP_ZOOM
-            };
-        };
-    },
+  geolocationError: function () {
+    var error = Geolocation.error();
+    return error && error.message;
+  },
+  mapOptions: function () {
+    var latLng = Geolocation.latLng();
+    // Initialize the map once we have the latLng.
+    if (GoogleMaps.loaded() && latLng) {
+      return {
+        center: new google.maps.LatLng(latLng.lat, latLng.lng),
+        zoom: MAP_ZOOM,
+      };
+    }
+  },
 });
 
 // Ajouts d'évènements
 Template.creerParcours.events({
-    'click #confirmerParcours': function () {
+  'click #confirmerParcours': function () {
+    Swal.fire({
+      title: 'Entrez un titre',
+      input: 'text',
+      confirmButtonText: 'Enregistrer',
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         Swal.fire({
-            title: 'Entrez un titre',
-            input: 'text',
-            confirmButtonText: 'Enregistrer',
-            showCancelButton: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: 'Votre parcours ' + result.value + ' a bien été ajouté',
-                    icon: 'success',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Démarrer le parcours',
-                }).then((resultConfirme) => {
-                    if (resultConfirme.isConfirmed) {
-                        //sauver liste d'ID d'oeuvre dans DB
-                        const ajoutId = Parcours.insert({
-                            titre: result.value,
-                            idList: listeOeuvresId
-                        });
-                        // Route vers afficher parcours : elle retient l'ID du parcours à afficher
-                        FlowRouter.go('afficherParcours', { _parcoursId: ajoutId });
-                    };
-                });
-            };
+          title: 'Votre parcours ' + result.value + ' a bien été ajouté',
+          icon: 'success',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Démarrer le parcours',
+        }).then((resultConfirme) => {
+          if (resultConfirme.isConfirmed) {
+            //sauver liste d'ID d'oeuvre dans DB
+            const ajoutId = Parcours.insert({
+              titre: result.value,
+              idList: listeOeuvresId,
+            });
+            // Route vers afficher parcours : elle retient l'ID du parcours à afficher
+            FlowRouter.go('afficherParcours', { _parcoursId: ajoutId });
+          }
         });
-    },
-    // Retour
-    'click #retour'(event) {
-        event.preventDefault();
-        FlowRouter.go('accueilLog');
-    },
-    // Bouton d'information
-    'click #informations'(event) {
-        event.preventDefault();
-        Swal.fire({
-            icon: 'info',
-            html:
-              'Cliquez une fois sur le repère pour ouvrir l\'image' +
-              '<br> ' + '<br> ' +
-              'Double-cliquez sur le repère de l\'oeuvre pour l\'ajouter à votre parcours',
-            showCloseButton: true,
-          })
-        },
+      }
+    });
+  },
+  // Retour
+  'click #retour'(event) {
+    event.preventDefault();
+    FlowRouter.go('accueilLog');
+  },
+  // Bouton d'information
+  'click #informations'(event) {
+    event.preventDefault();
+    Swal.fire({
+      icon: 'info',
+      html:
+        "Cliquez une fois sur le repère pour ouvrir l'image" +
+        '<br> ' +
+        '<br> ' +
+        "Double-cliquez sur le repère de l'oeuvre pour l'ajouter à votre parcours",
+      showCloseButton: true,
+    });
+  },
 });
 
 // Fonction pour afficher les markers
 function displayMarkers(map) {
-    var listOeuvres = Oeuvres.find({}).fetch();
-    console.log(listOeuvres);
-    listOeuvres.forEach(oeuvre => {
-        marker = new google.maps.Marker({
-            // Je distingue le marqueur de la position actuelle de la position des oeuvres
-            icon: 'http://maps.google.com/mapfiles/marker_green.png',
-            position: new google.maps.LatLng(oeuvre.lat, oeuvre.lng),
-            map: map.instance,
-        });
-        const contentString = `<img src="${oeuvre.image}">`;
-        const infowindow = new google.maps.InfoWindow({
-            content: contentString,
-        });
-        // Un clic, ouverture del'image
-        google.maps.event.addListener(marker, 'click', (function(marker) {
-            return function() {
-                infowindow.open(map, marker);
-            }
-        })(marker));
-        // Double clic : appel de la fonction d'ajout à la liste
-        google.maps.event.addListener(marker, 'dblclick', (function(marker) {
-            return function() {
-                addMarkerToList(oeuvre.lat, oeuvre.lng, oeuvre._id, oeuvre.image);
-                marker.setIcon('http://maps.google.com/mapfiles/marker_yellow.png');
-            }
-        })(marker));
-    })
+  var listOeuvres = Oeuvres.find({}).fetch();
+  console.log(listOeuvres);
+  listOeuvres.forEach((oeuvre) => {
+    marker = new google.maps.Marker({
+      // Je distingue le marqueur de la position actuelle de la position des oeuvres
+      icon: 'http://maps.google.com/mapfiles/marker_green.png',
+      position: new google.maps.LatLng(oeuvre.lat, oeuvre.lng),
+      map: map.instance,
+    });
+    const contentString = `<img src="${oeuvre.image}">`;
+    const infowindow = new google.maps.InfoWindow({
+      content: contentString,
+    });
+    // Un clic, ouverture del'image
+    google.maps.event.addListener(
+      marker,
+      'click',
+      (function (marker) {
+        return function () {
+          infowindow.open(map, marker);
+        };
+      })(marker)
+    );
+    // Double clic : appel de la fonction d'ajout à la liste
+    google.maps.event.addListener(
+      marker,
+      'dblclick',
+      (function (marker) {
+        return function () {
+          addMarkerToList(oeuvre.lat, oeuvre.lng, oeuvre._id, oeuvre.image);
+          marker.setIcon('http://maps.google.com/mapfiles/marker_yellow.png');
+        };
+      })(marker)
+    );
+  });
 }
 
 // Fonction qui gère la liste des oeuvres que contient le parcours
 function addMarkerToList(lat, lng, id, image) {
-    const oeuvreText =  'Position de l\'oeuvre : ' + ' ' + `latitude : ${lat}` + ' - ' + `longitude : ${lng}`  + '<br>' + `<img src="${image}" class="imageCSS">`;
-    listeOeuvres.push(oeuvreText);
-    listeOeuvresId.push(id);
-    console.log(listeOeuvres, listeOeuvresId);
-    const li = document.createElement('li');
-    li.innerHTML = oeuvreText;
-    document.getElementById("listeParcours").appendChild(li);
+  const oeuvreText =
+    "Position de l'oeuvre : " +
+    ' ' +
+    `latitude : ${lat}` +
+    ' - ' +
+    `longitude : ${lng}` +
+    '<br>' +
+    `<img src="${image}" class="imageCSS">`;
+  listeOeuvres.push(oeuvreText);
+  listeOeuvresId.push(id);
+  console.log(listeOeuvres, listeOeuvresId);
+  const li = document.createElement('li');
+  li.innerHTML = oeuvreText;
+  document.getElementById('listeParcours').appendChild(li);
 }

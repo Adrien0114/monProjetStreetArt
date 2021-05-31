@@ -46,7 +46,7 @@ if (Meteor.isClient) {
         }
       });
 
-      // Appel de la fonction pour afficher les parcours
+      // Appel de la fonction pour afficher les oeuvres sous forme de marker
       displayMarkers(map);
     });
   });
@@ -80,10 +80,12 @@ function displayMarkers(map) {
       position: new google.maps.LatLng(oeuvre.lat, oeuvre.lng),
       map: map.instance,
     });
+    // Image
     const contentString = `<img src="${oeuvre.image}">`;
     const infowindow = new google.maps.InfoWindow({
       content: contentString,
     });
+    // Affichage de l'image au click sur le marker
     google.maps.event.addListener(
       marker,
       'click',

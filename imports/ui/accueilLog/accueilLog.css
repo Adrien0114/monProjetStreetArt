@@ -46,7 +46,7 @@
 }
 
 #ajouterOeuvre:after {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   width: 20%;
@@ -62,7 +62,7 @@
   border-right-color: red;
 }
 #ajouterOeuvre:before {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   width: 20%;
@@ -96,7 +96,7 @@
 }
 
 #creerParcours:after {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   width: 20%;
@@ -112,7 +112,7 @@
   border-right-color: #fbc638;
 }
 #creerParcours:before {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   width: 20%;
@@ -146,7 +146,7 @@
 }
 
 #choisirParcours:after {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   width: 20%;
@@ -162,7 +162,7 @@
   border-right-color: blue;
 }
 #choisirParcours:before {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   width: 20%;

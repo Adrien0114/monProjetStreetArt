@@ -19,7 +19,6 @@ Template.choisirParcours.helpers({
   // A partir de ça, cliquer sur quelque chose qui nous affiche le parcours sélectionné.
   parcours: function () {
     /*let listeParcours = Parcours.find({}).fetch();
-    
     // Pour chaque parcours de cette liste de parcours, je l'affiche
     listeParcours.forEach(parcours => {
             afficherParcours(parcours);
@@ -28,7 +27,6 @@ Template.choisirParcours.helpers({
     return Parcours.find({});
   },
 });
-
 
 //On crée ici un helper pour parcoursLi. Dans ce helper, on va récupérer un parcour.
 //Des attributs sont liés à chacunes des instances / des parcours dans la db.
