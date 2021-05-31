@@ -2,25 +2,12 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 
 // Variable DB
-// Une base de données pour les oeuvres ajoutées ett une pour les parcours
+// Une base de données pour les oeuvres ajoutées et une pour les parcours
 export const Oeuvres = new Mongo.Collection('oeuvres');
 export const Parcours = new Mongo.Collection('parcours');
 
 // Ecriture des méthodes
 Meteor.methods({
-    // Cherche tous les éléments dans la collection oeuvre
-    retournerOeuvres: function () {
-        let oeuvres = Oeuvres.find({});
-        return oeuvres;
-    },
-
-    // ça check tous les éléments mais ça nous retourne que celui dont l'id est passé en paramètre
-    // findOne permet de trouver un élément en particulier
-    retournerOeuvreParId: function(id) {
-        let oeuvre = Oeuvres.findOne(id);
-        return oeuvre;
-    },
-
     // Ce qui ajoute toutes les infos au moment où on confirme l'ajout d'une oeuvre sur la carte
     ajouterOeuvre: function(lat, lng, image) {
         let ajout = Oeuvres.insert({

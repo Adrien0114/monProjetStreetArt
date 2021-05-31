@@ -15,6 +15,7 @@ import '../afficherParcours/afficherParcours.js';
 
 import { Session } from 'meteor/session';
 
+// Lors du clic sur le logo, toujours revenir à la bonne page précédente
 Template.app_body.events({
   'click #cta'(event) {
     event.preventDefault();

@@ -8,38 +8,11 @@ import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import Swal from 'sweetalert2';
 
-/*
-Template.connexion.events({
-    'click #annuler' (event) {
-      event.preventDefault();
-      FlowRouter.go('accueil');
-    },
-
-    'click #connexion-btn' (event) {
-      event.preventDefault();
-      let mail = document.getElementById('email').value;
-      let mdp = document.getElementById('password').value;
-      Meteor.loginWithPassword(mail, mdp, (error) => {
-        if (error){
-            alert(error.message)
-        } else{
-            SetTimeout(() => Flowrouter.go('accueilLog'), 200);
-        }
-      });
-    },
-
-    'click #creercompte' (event) {
-      event.preventDefault();
-      FlowRouter.go('creercompte');
-    }
-  });
-*/
-
-  Template.login.events({
+Template.login.events({
   "submit .form-signin": function(event){
     var email = event.target.email.value;
     var password = event.target.password.value;
-
+    
     Meteor.loginWithPassword(email, password, function(err){
       if(err){
         event.target.email.value = email;
@@ -50,7 +23,7 @@ Template.connexion.events({
         setTimeout(() => FlowRouter.go('accueilLog'), 200);
       }
     });
-
+    
     //Prevent submit
     return false;
   }
@@ -58,7 +31,7 @@ Template.connexion.events({
 
 Template.login.events({
   'click #retour'(event){
-  event.preventDefault();
-  FlowRouter.go('accueil');
+    event.preventDefault();
+    FlowRouter.go('accueil');
   }
 })

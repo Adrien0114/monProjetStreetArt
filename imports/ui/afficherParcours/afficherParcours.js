@@ -8,6 +8,7 @@ import { Oeuvres, Parcours } from '../../api/collection_DB.js';
 
 const Swal = require('sweetalert2');
 
+// Code map
 var MAP_ZOOM = 15;
 
 var firstRun = true;
@@ -18,205 +19,223 @@ let compteur = 0;
 let parcoursId;
 
 Meteor.startup(function () {
-    GoogleMaps.load();
+  GoogleMaps.load();
 });
 
 Template.afficherParcours.onCreated(function () {
-    var self = this;
+  var self = this;
 
-    GoogleMaps.ready('map', function (map) {
-        var marker;
+  GoogleMaps.ready('map', function (map) {
+    var marker;
 
-        // Create and move the marker when latLng changes.
-        self.autorun(function () {
-            var latLng = Geolocation.latLng();
-            if (!latLng)
-                return;
+    // Create and move the marker when latLng changes.
+    self.autorun(function () {
+      var latLng = Geolocation.latLng();
+      if (!latLng) return;
 
-            // If the marker doesn't yet exist, create it.
-            if (!marker) {
-                marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(latLng.lat, latLng.lng),
-                    map: map.instance
-                });
-            }
-            // The marker already exists, so we'll just change its position.
-            else {
-                marker.setPosition(latLng);
-            }
-
-            if (firstRun) {
-                // Center and zoom the map view onto the current position.
-                map.instance.setCenter(marker.getPosition());
-                map.instance.setZoom(MAP_ZOOM);
-                firstRun = false;
-            }
+      // If the marker doesn't yet exist, create it.
+      if (!marker) {
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(latLng.lat, latLng.lng),
+          map: map.instance,
         });
+      }
+      // The marker already exists, so we'll just change its position.
+      else {
+        marker.setPosition(latLng);
+      }
 
-        afficherParcoursMap(map);
-
+      if (firstRun) {
+        // Center and zoom the map view onto the current position.
+        map.instance.setCenter(marker.getPosition());
+        map.instance.setZoom(MAP_ZOOM);
+        firstRun = false;
+      }
     });
+
+    // Appel de la fonction d'affichage des parcours
+    afficherParcoursMap(map);
+  });
 });
 
 Template.afficherParcours.helpers({
-    geolocationError: function () {
-        var error = Geolocation.error();
-        return error && error.message;
-    },
-    mapOptions: function () {
-        var latLng = Geolocation.latLng();
-        // Initialize the map once we have the latLng.
-        if (GoogleMaps.loaded() && latLng) {
-            return {
-                center: new google.maps.LatLng(latLng.lat, latLng.lng),
-                zoom: MAP_ZOOM
-            };
-        };
-    },
-});
-
-Template.afficherParcours.helpers({
-    images: function() {
-        //Je donne à la variable déclarée en tête de code l'ID contenu dans la route.
-        parcoursId = FlowRouter.getParam('_parcoursId');
-        // Cette variable récupère la liste d'identifiants pour chaque parcours
-        const listeIds = Parcours.findOne( { _id: parcoursId } ).idList;
-        
-        const images = [];
-        listeIds.forEach(oeuvreId => {
-            const oeuvre = Oeuvres.findOne({_id: oeuvreId});
-            images.push(oeuvre.image)
-        });
-        return images
+  geolocationError: function () {
+    var error = Geolocation.error();
+    return error && error.message;
+  },
+  mapOptions: function () {
+    var latLng = Geolocation.latLng();
+    // Initialize the map once we have the latLng.
+    if (GoogleMaps.loaded() && latLng) {
+      return {
+        center: new google.maps.LatLng(latLng.lat, latLng.lng),
+        zoom: MAP_ZOOM,
+      };
     }
-})
+  },
+});
 
+Template.afficherParcours.helpers({
+  images: function () {
+    //Je donne à la variable déclarée en tête de code l'ID contenu dans la route.
+    parcoursId = FlowRouter.getParam('_parcoursId');
+    // Cette variable récupère la liste d'identifiants pour chaque parcours
+    const listeIds = Parcours.findOne({ _id: parcoursId }).idList;
+
+    const images = [];
+    listeIds.forEach((oeuvreId) => {
+      const oeuvre = Oeuvres.findOne({ _id: oeuvreId });
+      images.push(oeuvre.image);
+    });
+    return images;
+  },
+});
+
+// Ajout des évènements
 Template.afficherParcours.events({
-    'click #retour'(event) {
-        event.preventDefault();
+  'click #retour'(event) {
+    event.preventDefault();
+    FlowRouter.go('choisirParcours');
+  },
+  'click #boutonTerminé'(event) {
+    event.preventDefault();
+    Swal.fire({
+      icon: 'question',
+      title: 'Voulez-vous mettre fin à ce parcours ?',
+      showCancelButton: true,
+      cancelButtonText: `Annuler`,
+      showConfirmButton: true,
+      confirmButtonText: `Choisir un parcours`,
+      showDenyButton: true,
+      denyButtonText: `Retour au menu`,
+    }).then((result) => {
+      if (result.isConfirmed) {
         FlowRouter.go('choisirParcours');
-    },
-    'click #boutonTerminé'(event) {
-        event.preventDefault();
-        Swal.fire({
-            icon: 'question',
-            title: 'Voulez-vous mettre fin à ce parcours ?',
-            showCancelButton: true,
-            cancelButtonText: `Annuler`,
-            showConfirmButton: true,
-            confirmButtonText: `Choisir un parcours`,
-            showDenyButton: true,
-            denyButtonText: `Retour au menu`,
-          }).then((result) => {
-            if (result.isConfirmed) {
-                FlowRouter.go('choisirParcours');
-                //compteur = 0;
-            } else if (result.isDenied) {
-                FlowRouter.go('accueilLog');
-                //compteur = 0;
-            };
-        });
-    },
-    'click #information'(event) {
-        event.preventDefault();
-        Swal.fire({
-            icon: 'info',
-            html:
-              'Cliquez une fois sur le repère pour ouvrir l\'image' +
-              '<br> ' + '<br> ' +
-              'Double-cliquez sur l\'oeuvre pour signaler que vous l\'avez aperçue',
-            showCloseButton: true,
-          })
-        },
+      } else if (result.isDenied) {
+        FlowRouter.go('accueilLog');
+      }
+    });
+  },
+  'click #information'(event) {
+    event.preventDefault();
+    Swal.fire({
+      icon: 'info',
+      html:
+        "Cliquez une fois sur le repère pour ouvrir l'image" +
+        '<br> ' +
+        '<br> ' +
+        "Double-cliquez sur l'oeuvre pour signaler que vous l'avez aperçue",
+      showCloseButton: true,
+    });
+  },
 });
 
 function afficherParcoursMap(map) {
-    //récupérer Id du parcours (parcoursId) choisi à afficher depuis la page precédente 
-    /*let parcoursId = vient de choisirParcours ou de démarrer le parcours dans créerParcours :
+  //récupérer Id du parcours (parcoursId) choisi à afficher depuis la page precédente
+  /*let parcoursId = vient de choisirParcours ou de démarrer le parcours dans créerParcours :
     quand on clique sur le bouton dans une de ces pages, l'Id du parcours doit être retenu pour qu'il puisse être utilisé ensuite*/
 
-    let parcours = Parcours.findOne({_id: parcoursId});
+  let parcours = Parcours.findOne({ _id: parcoursId });
 
-    let oeuvresIdListe = parcours.idList;
+  let oeuvresIdListe = parcours.idList;
 
-    //Option 2 : créer un tableau, soit le faire manuellement avec un forEach ?
-    let listeOeuvres = [];
+  // Création d'un tableau contenant les oeuvres
+  let listeOeuvres = [];
 
-    
-    oeuvresIdListe.forEach(oeuvreId => {
-        const oeuvre = Oeuvres.findOne({_id: oeuvreId});
-        listeOeuvres.push(oeuvre)
+  oeuvresIdListe.forEach((oeuvreId) => {
+    const oeuvre = Oeuvres.findOne({ _id: oeuvreId });
+    listeOeuvres.push(oeuvre);
+  });
 
+  // On repousse dans le tableau la première oeuvre pour créer un boucle
+  listeOeuvres.push(listeOeuvres[0]);
+
+  let oeuvresARelier = [];
+
+  listeOeuvres.forEach((oeuvre) => {
+    // On pousse dans le tableau qui permettra de relier les différentes positions
+    oeuvresARelier.push({ lat: oeuvre.lat, lng: oeuvre.lng });
+
+    // À chaque oeuvre, différents comportements
+    marker = new google.maps.Marker({
+      // Je distingue le marqueur de la position actuelle de la position des oeuvres
+      icon: 'http://maps.google.com/mapfiles/marker_green.png',
+      position: new google.maps.LatLng(oeuvre.lat, oeuvre.lng),
+      map: map.instance,
     });
-
-    listeOeuvres.push(listeOeuvres[0]);
-    let oeuvresARelier = [];
-
-    listeOeuvres.forEach(oeuvre => {
-        oeuvresARelier.push({ lat: oeuvre.lat, lng: oeuvre.lng });
-        marker = new google.maps.Marker({
-            // Je distingue le marqueur de la position actuelle de la position des oeuvres
-            icon: 'http://maps.google.com/mapfiles/marker_green.png',
-            position: new google.maps.LatLng(oeuvre.lat, oeuvre.lng),
-            map: map.instance,
-        });
-            const contentString = `<img src="${oeuvre.image}">`;
-            const infowindow = new google.maps.InfoWindow({
-          content: contentString,
-        });
-        google.maps.event.addListener(marker, 'click', (function(marker) {
-            return function() {
-                //afficher la photo de l'oeuvre au simple click
-                infowindow.open(map, marker);
-            }
-        })(marker));
-        google.maps.event.addListener(marker, 'dblclick', (function(marker) {
-            return function() {
-                //changer couleur si l'oeuvre est vue
-                marker.setIcon('http://maps.google.com/mapfiles/marker_grey.png');
-                compteur += 100/ oeuvresIdListe.length;
-                let elem = document.getElementById("myBar");
-                elem.style.width = compteur + "%";
-                //Ici on enlève le simple clic pour qu'on ne puisse plus ouvrir l'image une fois l'oeuvre vue
-                google.maps.event.clearInstanceListeners(marker);
-                //Chercher dans toutes les balises images celles qui ont une source = à...
-                let image = document.querySelector("img", `src='${oeuvre.image}`);
-                image.classList.add('imageClass');
-                // Si le compteur = 100, c'est-à-dire si toutes les oeuvres ont été confirrmées, le parcours est terminé : annuler, retour au menu, choisir parcours
-                if (compteur == 100) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Vous avez terminé ce parcours !',
-                        showCancelButton: true,
-                        showConfirmButton: true,
-                        confirmButtonText: `Choisir un parcours`,
-                        showDenyButton: true,
-                        denyButtonText: `Retour au menu`,
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                            FlowRouter.go('choisirParcours');
-                            //compteur = 0;
-                        } else if (result.isDenied) {
-                            FlowRouter.go('accueilLog');
-                            //compteur = 0;
-                        };
-                    });
-                };
-            };
-        })(marker));
+    const contentString = `<img src="${oeuvre.image}">`;
+    const infowindow = new google.maps.InfoWindow({
+      content: contentString,
     });
+    // Un clic :
+    google.maps.event.addListener(
+      marker,
+      'click',
+      (function (marker) {
+        return function () {
+          //afficher la photo de l'oeuvre au simple click
+          infowindow.open(map, marker);
+        };
+      })(marker)
+    );
+    // Doucble clic :
+    google.maps.event.addListener(
+      marker,
+      'dblclick',
+      (function (marker) {
+        return function () {
+          //changer couleur si l'oeuvre est vue
+          marker.setIcon('http://maps.google.com/mapfiles/marker_grey.png');
 
-    relierOeuvres(map.instance, oeuvresARelier);
+          //Incrémenter un compteur de progression
+          compteur += 100 / oeuvresIdListe.length;
+          let elem = document.getElementById('myBar');
+          elem.style.width = compteur + '%';
 
-};
+          //Ici on enlève le simple clic pour qu'on ne puisse plus ouvrir l'image une fois l'oeuvre vue
+          google.maps.event.clearInstanceListeners(marker);
 
+          //Chercher dans toutes les balises images celles qui ont une source = à...
+          let image = document.querySelector(`img[src="${oeuvre.image}"]`);
+          // Ajout d'une classe pour griser les oeuvres vues
+          image.classList.add('imageClass');
+
+          // Si le compteur = 100, c'est-à-dire si toutes les oeuvres ont été confirrmées, le parcours est terminé : annuler, retour au menu, choisir parcours
+          if (compteur == 100) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Vous avez terminé ce parcours !',
+              showCancelButton: true,
+              showConfirmButton: true,
+              confirmButtonText: `Choisir un parcours`,
+              showDenyButton: true,
+              denyButtonText: `Retour au menu`,
+            }).then((result) => {
+              if (result.isConfirmed) {
+                FlowRouter.go('choisirParcours');
+                //compteur = 0;
+              } else if (result.isDenied) {
+                FlowRouter.go('accueilLog');
+                //compteur = 0;
+              }
+            });
+          }
+        };
+      })(marker)
+    );
+  });
+
+  relierOeuvres(map.instance, oeuvresARelier);
+}
+
+// Relier les oeuvres
 function relierOeuvres(map, oeuvresARelier) {
-      const flightPath = new google.maps.Polyline({
-        path: oeuvresARelier,
-        geodesic: true,
-        strokeColor: "#FF0000",
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
-      });
-      flightPath.setMap(map);
+  const flightPath = new google.maps.Polyline({
+    path: oeuvresARelier,
+    geodesic: true,
+    strokeColor: '#fbc638',
+    strokeOpacity: 1.0,
+    strokeWeight: 3,
+  });
+  flightPath.setMap(map);
 }

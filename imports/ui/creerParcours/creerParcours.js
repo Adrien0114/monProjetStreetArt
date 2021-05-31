@@ -73,6 +73,7 @@ Template.creerParcours.helpers({
     },
 });
 
+// Ajouts d'évènements
 Template.creerParcours.events({
     'click #confirmerParcours': function () {
         Swal.fire({
@@ -96,16 +97,19 @@ Template.creerParcours.events({
                             titre: result.value,
                             idList: listeOeuvresId
                         });
+                        // Route vers afficher parcours : elle retient l'ID du parcours à afficher
                         FlowRouter.go('afficherParcours', { _parcoursId: ajoutId });
                     };
                 });
             };
         });
     },
+    // Retour
     'click #retour'(event) {
         event.preventDefault();
         FlowRouter.go('accueilLog');
     },
+    // Bouton d'information
     'click #informations'(event) {
         event.preventDefault();
         Swal.fire({
@@ -113,12 +117,13 @@ Template.creerParcours.events({
             html:
               'Cliquez une fois sur le repère pour ouvrir l\'image' +
               '<br> ' + '<br> ' +
-              'Double-cliquez sur l\'oeuvre pour l\'ajouter à votre parcours',
+              'Double-cliquez sur le repère de l\'oeuvre pour l\'ajouter à votre parcours',
             showCloseButton: true,
           })
         },
 });
 
+// Fonction pour afficher les markers
 function displayMarkers(map) {
     var listOeuvres = Oeuvres.find({}).fetch();
     console.log(listOeuvres);
@@ -133,11 +138,13 @@ function displayMarkers(map) {
         const infowindow = new google.maps.InfoWindow({
             content: contentString,
         });
+        // Un clic, ouverture del'image
         google.maps.event.addListener(marker, 'click', (function(marker) {
             return function() {
                 infowindow.open(map, marker);
             }
         })(marker));
+        // Double clic : appel de la fonction d'ajout à la liste
         google.maps.event.addListener(marker, 'dblclick', (function(marker) {
             return function() {
                 addMarkerToList(oeuvre.lat, oeuvre.lng, oeuvre._id, oeuvre.image);
@@ -147,6 +154,7 @@ function displayMarkers(map) {
     })
 }
 
+// Fonction qui gère la liste des oeuvres que contient le parcours
 function addMarkerToList(lat, lng, id, image) {
     const oeuvreText =  'Position de l\'oeuvre : ' + ' ' + `latitude : ${lat}` + ' - ' + `longitude : ${lng}`  + '<br>' + `<img src="${image}" class="imageCSS">`;
     listeOeuvres.push(oeuvreText);
