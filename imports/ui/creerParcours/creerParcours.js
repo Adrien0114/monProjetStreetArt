@@ -95,6 +95,7 @@ Template.creerParcours.events({
               titre: result.value,
               idList: listeOeuvresId,
             });
+            listeOeuvresId = [];
             // Route vers afficher parcours : elle retient l'ID du parcours à afficher
             FlowRouter.go('afficherParcours', { _parcoursId: ajoutId });
           }

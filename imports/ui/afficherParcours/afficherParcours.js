@@ -8,7 +8,7 @@ import { Oeuvres, Parcours } from '../../api/collection_DB.js';
 
 const Swal = require('sweetalert2');
 
-// Code map
+
 var MAP_ZOOM = 15;
 
 var firstRun = true;
@@ -199,9 +199,10 @@ function afficherParcoursMap(map) {
           let image = document.querySelector(`img[src="${oeuvre.image}"]`);
           // Ajout d'une classe pour griser les oeuvres vues
           image.classList.add('imageClass');
-
+          console.log(compteur)
           // Si le compteur = 100, c'est-à-dire si toutes les oeuvres ont été confirrmées, le parcours est terminé : annuler, retour au menu, choisir parcours
           if (compteur == 100) {
+            compteur = 0; 
             Swal.fire({
               icon: 'success',
               title: 'Vous avez terminé ce parcours !',

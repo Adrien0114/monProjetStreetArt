@@ -9,6 +9,7 @@
 #myBar {
   width: 1%;
   height: 20px;
+  max-width: 200px;
   background-color: lawngreen;
 }
 
